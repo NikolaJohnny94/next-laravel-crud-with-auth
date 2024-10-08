@@ -46,8 +46,8 @@ export default function LoginPage() {
     validationSchema: toFormikValidationSchema(validationSchema),
     validateOnChange: false,
     validateOnBlur: true,
-    onSubmit: async (values) => {
-      await apiService.login(values.email, values.password)
+    onSubmit: (values) => {
+      apiService.login(values.email, values.password)
       console.log('Form data:', values)
     },
   })
