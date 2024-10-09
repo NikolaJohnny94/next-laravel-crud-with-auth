@@ -1,5 +1,3 @@
-import { SVGProps } from "react";
-
-export type IconSvgProps = SVGProps<SVGSVGElement> & {
-  size?: number;
-};
+export * from './IconSvgProps.type'
+export * from './auth'
+export * from './task/Task.type'
