@@ -34,6 +34,14 @@ class ApiService {
     })
   }
 
+  getTask(id: number) {
+    return api.get(`/tasks/${id}`, {
+      headers: {
+        Authorization: `Bearer ${cookies().get('access_token_cookie')?.value}`,
+      },
+    })
+  }
+
   // getUser() {
   // {
   //   headers: {

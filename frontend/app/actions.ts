@@ -58,7 +58,7 @@ export async function registration(
   }
 }
 
-type TaskResponse = {
+type TasksResponse = {
   success: boolean
   data: Task[]
   message: string
@@ -66,12 +66,30 @@ type TaskResponse = {
 
 export async function getTasks() {
   try {
-    const response: AxiosResponse<TaskResponse> = await apiService.getTasks()
+    const response: AxiosResponse<TasksResponse> = await apiService.getTasks()
     return response.data
   } catch (error: any) {
     return {
       success: false,
       data: [],
+      message: error.response.data.message as string,
+    }
+  }
+}
+type TaskResponse = {
+  success: boolean
+  data: Task
+  message: string
+}
+
+export async function getTask(id: number) {
+  try {
+    const response: AxiosResponse<any> = await apiService.getTask(id)
+    return response.data
+  } catch (error: any) {
+    return {
+      success: false,
+      data: {},
       message: error.response.data.message as string,
     }
   }
