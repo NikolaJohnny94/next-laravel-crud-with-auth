@@ -1,10 +1,14 @@
 'use client'
+// Core (React and Next)
 import React, { useState, useEffect } from 'react'
-import { useParams } from 'next/navigation'
-import { Task } from '@/types'
-import { getTask } from '@/app/actions'
-import { Button } from '@nextui-org/button'
 import Link from 'next/link'
+import { useParams } from 'next/navigation'
+//Actions
+import { getTask } from '@/app/actions'
+//Utils
+import { getTaskIdFromSlug } from '@/utils'
+//Types
+import { Task } from '@/types'
 
 export default function TaskDetailsPage() {
   const [task, setTask] = useState<Task | null>(null)
@@ -12,12 +16,7 @@ export default function TaskDetailsPage() {
 
   useEffect(() => {
     const fetchTask = async () => {
-      const taskId = Array.isArray(slug)
-        ? Number(slug[slug.length - 1])
-        : typeof slug === 'string'
-          ? Number(slug.split('-').pop())
-          : 0
-
+      const taskId = getTaskIdFromSlug(slug)
       const { success, data } = await getTask(taskId)
       if (success) setTask(data)
     }
