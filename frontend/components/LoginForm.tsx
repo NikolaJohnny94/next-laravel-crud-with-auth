@@ -17,6 +17,7 @@ import { loginValidationSchema } from '@/schemas'
 import ErrorMessage from '@/components/ErrorMessage'
 //Types
 import { LoginFormData } from '@/types/auth/LoginFormData.type'
+import { slugify } from '@/utils'
 
 export default function LoginForm() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
@@ -31,10 +32,8 @@ export default function LoginForm() {
     validateOnBlur: true,
     onSubmit: async (values) => {
       const response: any = await login(values.email, values.password)
-      console.log(response)
       if (response?.success) {
-        // router.push(`/user/${response.data.email}`)
-        router.push('/user')
+        router.push(`/user/${slugify(response.data.name)}/tasks/dashboard`)
       } else {
         setErrorMessage(response?.message)
       }

@@ -53,6 +53,8 @@ import Link from 'next/link'
 import { getTask } from '@/app/actions'
 //Utils
 import { getTaskId } from '@/utils'
+import { redirect } from 'next/navigation'
+// import { redirect } from 'next/navigation'
 
 type Params = {
   params: {
@@ -62,7 +64,10 @@ type Params = {
   }
 }
 export default async function TaskDetailsPage({ params }: Params) {
-  const { data: task } = await getTask(getTaskId(params.id))
+  const { data: task, message } = await getTask(getTaskId(params.id))
+  if (message === 'Unauthenticated.') {
+    redirect('http://localhost:3000/auth/login-universal')
+  }
 
   return (
     <div>

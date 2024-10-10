@@ -42,6 +42,28 @@ class ApiService {
     })
   }
 
+  createTask(
+    title: string,
+    description: string,
+    category: string,
+    finished: boolean
+  ) {
+    return api.post(
+      '/tasks',
+      {
+        title,
+        description,
+        category,
+        finished,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${cookies().get('access_token_cookie')?.value}`,
+        },
+      }
+    )
+  }
+
   // getUser() {
   // {
   //   headers: {

@@ -10,9 +10,16 @@ import { AxiosResponse } from 'axios'
 export async function login(email: string, password: string) {
   try {
     const response = await apiService.login(email, password)
-
+    console.log(response.data.data.name)
     if (response.data.success) {
       cookies().set('access_token_cookie', response.data.token, {
+        maxAge: 60 * 60 * 24 * 30,
+        httpOnly: true,
+        secure: true,
+        sameSite: 'strict',
+      })
+
+      cookies().set('username', response.data.data.name, {
         maxAge: 60 * 60 * 24 * 30,
         httpOnly: true,
         secure: true,
@@ -87,6 +94,37 @@ export async function getTask(id: number) {
     const response: AxiosResponse<any> = await apiService.getTask(id)
     return response.data
   } catch (error: any) {
+    console.log(error.response.data)
+    return {
+      success: false,
+      data: {},
+      message: error.response.data.message as string,
+    }
+  }
+}
+
+export async function getCookies() {
+  const cookieUsername = cookies().get('username')?.value as string
+  const cookieToken = cookies().get('access_token_cookie')?.value as string
+  return { username: cookieUsername, token: cookieToken }
+}
+
+export async function createTask(
+  title: string,
+  description: string,
+  category: string,
+  finished: boolean
+) {
+  try {
+    const response = await apiService.createTask(
+      title,
+      description,
+      category,
+      finished
+    )
+    return response.data
+  } catch (error: any) {
+    console.log(error.response.data)
     return {
       success: false,
       data: {},

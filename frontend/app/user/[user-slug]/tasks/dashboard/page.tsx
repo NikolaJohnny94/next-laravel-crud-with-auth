@@ -1,34 +1,34 @@
-'use client'
-// Core (React and Next)
-import React, { useEffect, useState } from 'react'
-import Modal from '@/components/Modal'
-//Actions
-import { getTasks } from '@/app/actions'
+// 'use client'
+// // Core (React and Next)
+// import React, { useEffect, useState } from 'react'
+// import Modal from '@/components/Modal'
+// //Actions
+// import { getTasks } from '@/app/actions'
 
-//Types
-import type { Task } from '@/types'
-import TaskTable from '@/components/TaskTable'
+// //Types
+// import type { Task } from '@/types'
+// import TaskTable from '@/components/TaskTable'
 
-export default function UserPage() {
-  const [tasks, setTasks] = useState<Task[]>([])
+// export default function UserPage() {
+//   const [tasks, setTasks] = useState<Task[]>([])
 
-  useEffect(() => {
-    const fetchTasks = async () => {
-      const { success, data } = await getTasks()
-      if (success) setTasks(data)
-    }
-    fetchTasks()
-  }, [])
+//   useEffect(() => {
+//     const fetchTasks = async () => {
+//       const { success, data } = await getTasks()
+//       if (success) setTasks(data)
+//     }
+//     fetchTasks()
+//   }, [])
 
-  return (
-    <div>
-      <div className='flex justify-end mb-4'>
-        <Modal />
-      </div>
-      <TaskTable tasks={tasks} />
-    </div>
-  )
-}
+//   return (
+//     <div>
+//       <div className='flex justify-end mb-4'>
+//         <Modal />
+//       </div>
+//       <TaskTable tasks={tasks} />
+//     </div>
+//   )
+// }
 
 //Core (React and Next)
 // import React from 'react'
@@ -53,3 +53,10 @@ export default function UserPage() {
 // }
 
 // export const revalidate = 1
+
+import React from 'react'
+import Dashboard from '@/components/Dashboard'
+
+export default function page() {
+  return <Dashboard />
+}
