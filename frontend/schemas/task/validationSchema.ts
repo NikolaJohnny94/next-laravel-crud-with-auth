@@ -6,5 +6,5 @@ export const taskValidationSchema = z.object({
   category: z
     .enum(['', 'work', 'personal', 'other'])
     .refine((value) => value !== '', 'Invalid category'),
-  finished: z.boolean(),
+  finished: z.enum(['true', 'false']),
 })

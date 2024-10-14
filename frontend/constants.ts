@@ -51,3 +51,9 @@ export const subtitle = tv({
     fullWidth: true,
   },
 })
+
+export const categories = [
+  { key: 'work', label: 'Work' },
+  { key: 'personal', label: 'Personal' },
+  { key: 'other', label: 'Other' },
+]

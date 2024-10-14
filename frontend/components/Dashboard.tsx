@@ -1,56 +1,36 @@
 'use client'
 // Core (React and Next)
 import React, { useEffect, useState } from 'react'
-import Modal from '@/components/Modal'
+import { useRouter } from 'next/navigation'
+//Components
+import { CreateModal } from '@/components'
+import TaskTable from '@/components/TaskTable'
 //Actions
 import { getTasks } from '@/app/actions'
-
 //Types
-import type { Task } from '@/types'
-import TaskTable from '@/components/TaskTable'
+import { Task } from '@/types'
 
 export default function Dashboard() {
+  const router = useRouter()
   const [tasks, setTasks] = useState<Task[]>([])
   const [newTaskCreted, setNewTaskCreted] = useState<boolean>(false)
+  const [newTaskEdited, setNewTaskEdited] = useState<boolean>(false)
 
   useEffect(() => {
     const fetchTasks = async () => {
-      const { success, data } = await getTasks()
+      const { success, data, message } = await getTasks()
       if (success) setTasks(data)
+      if (message === 'Unauthenticated.') router.push('/auth/login')
     }
     fetchTasks()
-  }, [newTaskCreted])
+  }, [newTaskCreted, newTaskEdited])
 
   return (
     <div>
       <div className='flex justify-end mb-4'>
-        <Modal setNewTaskCreted={setNewTaskCreted} />
+        <CreateModal setNewTaskCreted={setNewTaskCreted} />
       </div>
-      <TaskTable tasks={tasks} />
+      <TaskTable tasks={tasks} setNewTaskEdited={setNewTaskEdited} />
     </div>
   )
 }
-
-//Core (React and Next)
-// import React from 'react'
-// // NextUI
-// import { Button } from '@nextui-org/button'
-// // Actions
-// import { getTasks } from '@/app/actions'
-// // Components
-// import TaskTable from '@/components/TaskTable'
-// import Modal from '@/components/Modal'
-
-// export default async function DashboardPage() {
-//   const { data: tasks } = await getTasks()
-//   return (
-//     <div>
-//       <div className='flex justify-end mb-4'>
-//         <Modal />
-//       </div>
-//       <TaskTable tasks={tasks} />
-//     </div>
-//   )
-// }
-
-// export const revalidate = 1

@@ -13,71 +13,88 @@ import {
   ModalFooter,
   Button,
   useDisclosure,
+  Tooltip,
 } from '@nextui-org/react'
 import { Input } from '@nextui-org/input'
 import { Select, SelectItem } from '@nextui-org/select'
 import { Radio, RadioGroup } from '@nextui-org/radio'
 // Actions
-import { createTask } from '@/app/actions'
+import { createTask, editTask, TaskResponse } from '@/app/actions'
 //Components
 import ErrorMessage from '@/components/ErrorMessage'
+import { EditIcon } from '../Icons'
 // Schemas
 import { taskValidationSchema } from '@/schemas'
+//Data
+import { categories } from '@/constants'
 // Types
-import type { Dispatch, SetStateAction } from 'react'
-
-export type TaskFormData = {
-  title: string
-  description: string
-  category: '' | 'work' | 'personal' | 'other'
-  finished: boolean
-}
-
-const categories = [
-  { key: 'work', label: 'Work' },
-  { key: 'personal', label: 'Personal' },
-  { key: 'other', label: 'Other' },
-]
+import { Dispatch, SetStateAction } from 'react'
+import { TaskFormData } from '@/types'
 
 type Props = {
-  setNewTaskCreted: Dispatch<SetStateAction<boolean>>
+  taskId: number
+  title: string
+  description: string
+  category: 'work' | 'personal' | 'other'
+  finished: 'true' | 'false'
+  setNewTaskEdited: Dispatch<SetStateAction<boolean>>
 }
 
-export default function App({ setNewTaskCreted }: Props) {
+export const EditModal = ({
+  taskId,
+  title,
+  description,
+  category,
+  finished,
+  setNewTaskEdited,
+}: Props) => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure()
   const formik = useFormik<TaskFormData>({
     initialValues: {
-      title: '',
-      description: '',
-      category: '',
-      finished: false,
+      title: title,
+      description: description,
+      category: category,
+      finished: finished,
     },
     validationSchema: toFormikValidationSchema(taskValidationSchema),
     validateOnChange: false,
     validateOnBlur: true,
     onSubmit: async (values) => {
-      setNewTaskCreted(false)
-      const response: any = await createTask(
-        values.title,
-        values.description,
-        values.category,
-        Boolean(values.finished)
-      )
-      if (response?.success) {
-        setNewTaskCreted(true)
-        onClose()
+      setNewTaskEdited(false)
+      if (
+        values.title !== title ||
+        values.description !== description ||
+        values.category !== category ||
+        values.finished !== finished
+      ) {
+        console.log('Different')
+        const response: TaskResponse = await editTask(taskId, {
+          title: values.title,
+          description: values.description,
+          category: values.category,
+          finished: Boolean(values.finished === 'true'),
+        })
+        if (response?.success) {
+          setNewTaskEdited(true)
+          onClose()
+        } else {
+          setErrorMessage(response?.message)
+        }
       } else {
-        setErrorMessage(response?.message)
+        onClose()
       }
     },
   })
 
   return (
     <>
-      <Button onPress={onOpen} color='danger'>
-        New Task
-      </Button>
+      <Tooltip color='primary' content='Edit user'>
+        <span className='text-lg text-primary cursor-pointer active:opacity-50'>
+          <EditIcon onClick={onOpen} />
+        </span>
+      </Tooltip>
+
       <Modal
         isOpen={isOpen}
         onOpenChange={onOpenChange}
@@ -127,11 +144,11 @@ export default function App({ setNewTaskCreted }: Props) {
                   <div className='mb-4'>
                     <Select
                       items={categories}
-                      // label='Favorite Animal'
                       placeholder='Select category'
                       className='max-w-xs'
                       name='category'
                       value={formik.values.category}
+                      selectedKeys={[formik.values.category]}
                       onChange={formik.handleChange}
                     >
                       {(animal) => (
@@ -148,7 +165,7 @@ export default function App({ setNewTaskCreted }: Props) {
                     <RadioGroup
                       label='Select your favorite city'
                       name='finished'
-                      value={`${formik.values.finished}`}
+                      value={formik.values.finished}
                       onChange={formik.handleChange}
                     >
                       <Radio value='true'>Completed</Radio>
@@ -165,14 +182,6 @@ export default function App({ setNewTaskCreted }: Props) {
                   </Button>
                 </form>
               </ModalBody>
-              <ModalFooter>
-                <Button color='danger' variant='light' onPress={onClose}>
-                  Close
-                </Button>
-                <Button color='primary' onPress={onClose}>
-                  Action
-                </Button>
-              </ModalFooter>
             </>
           )}
         </ModalContent>

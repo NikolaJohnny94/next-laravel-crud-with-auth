@@ -66,7 +66,7 @@ type Params = {
 export default async function TaskDetailsPage({ params }: Params) {
   const { data: task, message } = await getTask(getTaskId(params.id))
   if (message === 'Unauthenticated.') {
-    redirect('http://localhost:3000/auth/login-universal')
+    redirect('http://localhost:3000/auth/login')
   }
 
   return (

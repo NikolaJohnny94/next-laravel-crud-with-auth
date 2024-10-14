@@ -65,6 +65,23 @@ export async function registration(
   }
 }
 
+export const logout = async () => {
+  try {
+    const response = await apiService.logout()
+
+    if (response.data.success) {
+      cookies().delete('access_token_cookie')
+      cookies().delete('username')
+      return response.data
+    }
+  } catch (error: any) {
+    return {
+      success: false,
+      message: error.response.data.message as string,
+    }
+  }
+}
+
 type TasksResponse = {
   success: boolean
   data: Task[]
@@ -78,12 +95,12 @@ export async function getTasks() {
   } catch (error: any) {
     return {
       success: false,
-      data: [],
+      data: [] as Task[],
       message: error.response.data.message as string,
     }
   }
 }
-type TaskResponse = {
+export type TaskResponse = {
   success: boolean
   data: Task
   message: string
@@ -91,13 +108,13 @@ type TaskResponse = {
 
 export async function getTask(id: number) {
   try {
-    const response: AxiosResponse<any> = await apiService.getTask(id)
+    const response: AxiosResponse<TaskResponse> = await apiService.getTask(id)
     return response.data
   } catch (error: any) {
     console.log(error.response.data)
     return {
       success: false,
-      data: {},
+      data: {} as Task,
       message: error.response.data.message as string,
     }
   }
@@ -109,6 +126,12 @@ export async function getCookies() {
   return { username: cookieUsername, token: cookieToken }
 }
 
+// export type TaskResponse = {
+//   success: boolean
+//   data: Task
+//   message: string
+// }
+
 export async function createTask(
   title: string,
   description: string,
@@ -116,7 +139,7 @@ export async function createTask(
   finished: boolean
 ) {
   try {
-    const response = await apiService.createTask(
+    const response: AxiosResponse<TaskResponse> = await apiService.createTask(
       title,
       description,
       category,
@@ -127,7 +150,36 @@ export async function createTask(
     console.log(error.response.data)
     return {
       success: false,
-      data: {},
+      data: {} as Task,
+      message: error.response.data.message as string,
+    }
+  }
+}
+
+type Data = {
+  title?: string
+  description?: string
+  category?: 'work' | 'personal' | 'other'
+  finished?: boolean
+}
+
+// export type ErrorResponse = {
+//   success: boolean
+//   message: string
+// }
+
+export async function editTask(id: number, data: Data) {
+  try {
+    const response: AxiosResponse<TaskResponse> = await apiService.editTask(
+      id,
+      data
+    )
+    return response.data
+  } catch (error: any) {
+    console.log(error.response.data)
+    return {
+      success: false,
+      data: {} as Task,
       message: error.response.data.message as string,
     }
   }

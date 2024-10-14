@@ -1,10 +1,5 @@
-import { Spinner } from '@nextui-org/spinner'
+import Spinner from '@/components/Spinner'
 
-export default function App() {
-  return (
-    <div className='flex justify-center gap-4'>
-      <span className='text-xl text-danger'>Loading...</span>{' '}
-      <Spinner color='danger' />
-    </div>
-  )
+export default function Loading() {
+  return <Spinner />
 }

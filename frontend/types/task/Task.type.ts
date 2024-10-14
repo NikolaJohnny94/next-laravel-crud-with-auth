@@ -2,7 +2,7 @@ export type Task = {
   id: number
   title: string
   description: string
-  category: string
+  category: 'work' | 'personal' | 'other'
   finished: boolean
   slug: string
   user_id: number

@@ -10,30 +10,36 @@ import { Button } from '@nextui-org/button'
 // Zod related
 import { toFormikValidationSchema } from 'zod-formik-adapter'
 // Server actions
-import { login } from '@/app/actions'
+import { registration } from '@/app/actions'
 // Schemas
-import { loginValidationSchema } from '@/schemas'
+import { registrationValidationSchema } from '@/schemas'
 // Components
 import ErrorMessage from '@/components/ErrorMessage'
-//Types
-import { LoginFormData } from '@/types/auth/LoginFormData.type'
-import { slugify } from '@/utils'
+// Types
+import { RegistrationFormData } from '@/types'
 
-export default function LoginForm() {
+export function RegistrationForm() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const router = useRouter()
-  const formik = useFormik<LoginFormData>({
+  const formik = useFormik<RegistrationFormData>({
     initialValues: {
+      name: '',
       email: '',
       password: '',
+      password_confirmation: '',
     },
-    validationSchema: toFormikValidationSchema(loginValidationSchema),
+    validationSchema: toFormikValidationSchema(registrationValidationSchema),
     validateOnChange: false,
     validateOnBlur: true,
     onSubmit: async (values) => {
-      const response: any = await login(values.email, values.password)
+      const response = await registration(
+        values.name,
+        values.email,
+        values.password,
+        values.password_confirmation
+      )
       if (response?.success) {
-        router.push(`/user/${slugify(response.data.name)}/tasks/dashboard`)
+        router.push('/user')
       } else {
         setErrorMessage(response?.message)
       }
@@ -43,6 +49,20 @@ export default function LoginForm() {
   return (
     <form onSubmit={formik.handleSubmit}>
       {errorMessage && <ErrorMessage message={errorMessage} />}
+      <div className='mb-4 mt-2'>
+        <Input
+          isRequired
+          type='text'
+          label='Name'
+          name='name'
+          value={formik.values.name}
+          onChange={formik.handleChange}
+          className='max-w-xs'
+        />
+        {formik.touched.name && formik.errors.name && (
+          <ErrorMessage message={formik.errors.name} />
+        )}
+      </div>
       <div className='mb-4 mt-2'>
         <Input
           isRequired
@@ -70,6 +90,21 @@ export default function LoginForm() {
         {formik.touched.password && formik.errors.password && (
           <ErrorMessage message={formik.errors.password} />
         )}
+      </div>
+      <div className='mb-4'>
+        <Input
+          isRequired
+          type='password'
+          label='Confirm password'
+          name='password_confirmation'
+          value={formik.values.password_confirmation}
+          onChange={formik.handleChange}
+          className='max-w-xs'
+        />
+        {formik.touched.password_confirmation &&
+          formik.errors.password_confirmation && (
+            <ErrorMessage message={formik.errors.password_confirmation} />
+          )}
       </div>
       <Button
         type='submit'

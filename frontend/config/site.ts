@@ -6,16 +6,16 @@ export const siteConfig = {
   navItems: [
     {
       label: 'Login',
-      href: '/auth/login-universal',
+      href: '/auth/login',
     },
     {
       label: 'Registration',
       href: '/auth/registration',
     },
-    {
-      label: 'Dashboard',
-      href: '/user',
-    },
+    // {
+    //   label: 'Dashboard',
+    //   href: '/user',
+    // },
   ],
   navMenuItems: [
     {

@@ -1,2 +1,5 @@
 export * from './Layout'
-export * from './Icons/'
+export * from './Icons'
+export * from './Modals'
+export * from './Forms'
+export * from './ThemeSwitch'

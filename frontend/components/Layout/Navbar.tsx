@@ -1,3 +1,6 @@
+//Core
+import NextLink from 'next/link'
+// NextUI
 import {
   Navbar as NextUINavbar,
   NavbarContent,
@@ -5,11 +8,13 @@ import {
   NavbarItem,
 } from '@nextui-org/navbar'
 import { link as linkStyles } from '@nextui-org/theme'
-import NextLink from 'next/link'
+// clsx
 import clsx from 'clsx'
-
+//Components
+import { ThemeSwitch } from '@/components/'
+import { Logout } from '../Logout'
+//Config
 import { siteConfig } from '@/config/site'
-import { Logo } from '@/components/icons'
 
 type Props = {
   username: string | undefined
@@ -17,6 +22,7 @@ type Props = {
 }
 
 export const Navbar = ({ username, isLoggedIn }: Props) => {
+  // NavItems to render
   const navItems = siteConfig.navItems.filter((item) => {
     if (isLoggedIn && item.label === 'Dashboard') {
       return item
@@ -31,11 +37,14 @@ export const Navbar = ({ username, isLoggedIn }: Props) => {
 
   return (
     <NextUINavbar maxWidth='xl' position='sticky'>
-      <NavbarContent className='basis-1/5 sm:basis-full' justify='start'>
+      <NavbarContent
+        className='basis-1/5 sm:basis-full !flex !justify-between'
+        justify='start'
+      >
         <NavbarBrand as='li' className='gap-3 max-w-fit'>
           <NextLink className='flex justify-start items-center gap-1' href='/'>
-            <Logo />
-            <p className='font-bold text-inherit'>ACME</p>
+            <ThemeSwitch />
+            <p className='font-bold text-inherit ml-2'>Next 14 + Laravel</p>
           </NextLink>
         </NavbarBrand>
         <ul className='hidden lg:flex gap-4 justify-start ml-2'>
@@ -54,7 +63,10 @@ export const Navbar = ({ username, isLoggedIn }: Props) => {
             </NavbarItem>
           ))}
           {isLoggedIn && (
-            <NavbarItem className='text-danger'>{username}</NavbarItem>
+            <div className='flex justify-center items-center gap-4'>
+              <NavbarItem className='text-danger'>{username}</NavbarItem>
+              <Logout />
+            </div>
           )}
         </ul>
       </NavbarContent>

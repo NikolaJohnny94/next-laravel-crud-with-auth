@@ -8,7 +8,7 @@ export function middleware(request: NextRequest) {
   const token = cookies().get('access_token_cookie')?.value
   if (!token) {
     return NextResponse.redirect(
-      `${process.env.NEXT_PUBLIC_APP_URL}/auth/login-universal`
+      `${process.env.NEXT_PUBLIC_APP_URL}/auth/login`
     )
   }
 
@@ -23,7 +23,7 @@ export const config = {
 //   const token = cookies().get('access_token_cookie')?.value;
 //   if (!token) {
 //     return NextResponse.redirect(
-//       `${process.env.NEXT_PUBLIC_APP_URL}/auth/login-universal`
+//       `${process.env.NEXT_PUBLIC_APP_URL}/auth/login`
 //     );
 //   }
 
