@@ -10,7 +10,6 @@ import {
   ModalContent,
   ModalHeader,
   ModalBody,
-  ModalFooter,
   Button,
   useDisclosure,
   Tooltip,
@@ -18,8 +17,10 @@ import {
 import { Input } from '@nextui-org/input'
 import { Select, SelectItem } from '@nextui-org/select'
 import { Radio, RadioGroup } from '@nextui-org/radio'
+//React Hot Toast
+import { toast } from 'react-hot-toast'
 // Actions
-import { createTask, editTask, TaskResponse } from '@/app/actions'
+import { editTask } from '@/app/actions'
 //Components
 import ErrorMessage from '@/components/ErrorMessage'
 import { EditIcon } from '../Icons'
@@ -29,7 +30,7 @@ import { taskValidationSchema } from '@/schemas'
 import { categories } from '@/constants'
 // Types
 import { Dispatch, SetStateAction } from 'react'
-import { TaskFormData } from '@/types'
+import { TaskFormData, TaskResponse, Task } from '@/types'
 
 type Props = {
   taskId: number
@@ -68,14 +69,15 @@ export const EditModal = ({
         values.category !== category ||
         values.finished !== finished
       ) {
-        console.log('Different')
-        const response: TaskResponse = await editTask(taskId, {
+        const response: TaskResponse<Task> = await editTask(taskId, {
           title: values.title,
           description: values.description,
           category: values.category,
           finished: Boolean(values.finished === 'true'),
         })
+
         if (response?.success) {
+          toast.success('Task edited successfully')
           setNewTaskEdited(true)
           onClose()
         } else {

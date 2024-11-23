@@ -12,7 +12,7 @@ import { link as linkStyles } from '@nextui-org/theme'
 import clsx from 'clsx'
 //Components
 import { ThemeSwitch } from '@/components/'
-import { Logout } from '../Logout'
+import { Logout } from './LogoutButton'
 //Config
 import { siteConfig } from '@/config/site'
 

@@ -39,7 +39,7 @@ export function RegistrationForm() {
         values.password_confirmation
       )
       if (response?.success) {
-        router.push('/user')
+        router.push('/auth/login')
       } else {
         setErrorMessage(response?.message)
       }

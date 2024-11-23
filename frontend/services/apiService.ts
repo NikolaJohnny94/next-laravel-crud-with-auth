@@ -14,7 +14,7 @@ const config = () => {
   }
 }
 
-type Data = {
+type EditTaskDTO = {
   title?: string
   description?: string
   category?: 'work' | 'personal' | 'other'
@@ -74,8 +74,12 @@ class ApiService {
     )
   }
 
-  editTask(id: number, data: Data) {
+  editTask(id: number, data: EditTaskDTO) {
     return api.put(`/tasks/${id}`, data, config())
+  }
+
+  deleteTask(id: number) {
+    return api.delete(`/tasks/${id}`, config())
   }
 }
 

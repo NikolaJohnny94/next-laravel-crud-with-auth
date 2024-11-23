@@ -13,9 +13,7 @@ import {
 } from '@nextui-org/table'
 import { Tooltip } from '@nextui-org/tooltip'
 //Components
-import { DeleteIcon, EditIcon, EditModal, EyeIcon } from '@/components'
-//Utils
-import { slugify } from '@/utils/slugify'
+import { EditModal, DeleteModal, EyeIcon } from '@/components'
 //Types
 import type { Dispatch, SetStateAction } from 'react'
 import type { Task } from '@/types'
@@ -23,9 +21,14 @@ import type { Task } from '@/types'
 type Props = {
   tasks: Task[]
   setNewTaskEdited: Dispatch<SetStateAction<boolean>>
+  setTaskDeleted: Dispatch<SetStateAction<boolean>>
 }
 
-export default function TaskTable({ tasks, setNewTaskEdited }: Props) {
+export default function TaskTable({
+  tasks,
+  setNewTaskEdited,
+  setTaskDeleted,
+}: Props) {
   return (
     <div className='flex flex-col gap-3'>
       <Table
@@ -54,9 +57,7 @@ export default function TaskTable({ tasks, setNewTaskEdited }: Props) {
               <TableCell>{task.finished ? 'Yes' : 'No'}</TableCell>
               <TableCell>
                 <Tooltip content='Details' color='success'>
-                  <Link
-                    href={`/user/new-user/tasks/${task.id}/${slugify(task.title)}`}
-                  >
+                  <Link href={`/tasks/${task.id}/${task.slug}`}>
                     <span className='text-lg text-success cursor-pointer active:opacity-50'>
                       <EyeIcon />
                     </span>
@@ -72,18 +73,9 @@ export default function TaskTable({ tasks, setNewTaskEdited }: Props) {
                   finished={`${task.finished}` as 'true' | 'false'}
                   setNewTaskEdited={setNewTaskEdited}
                 />
-                {/* <Tooltip color='primary' content='Edit user'>
-                  <span className='text-lg text-primary cursor-pointer active:opacity-50'>
-                    <EditIcon />
-                  </span>
-                </Tooltip> */}
               </TableCell>
               <TableCell>
-                <Tooltip color='danger' content='Delete user'>
-                  <span className='text-lg text-danger cursor-pointer active:opacity-50'>
-                    <DeleteIcon />
-                  </span>
-                </Tooltip>
+                <DeleteModal taskId={task.id} setTaskDeleted={setTaskDeleted} />
               </TableCell>
             </TableRow>
           ))}

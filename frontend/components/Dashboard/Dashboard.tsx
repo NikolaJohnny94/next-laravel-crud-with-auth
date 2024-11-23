@@ -2,9 +2,11 @@
 // Core (React and Next)
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+//React hot toast
+import { Toaster } from 'react-hot-toast'
 //Components
 import { CreateModal } from '@/components'
-import TaskTable from '@/components/TaskTable'
+import TaskTable from './TaskTable'
 //Actions
 import { getTasks } from '@/app/actions'
 //Types
@@ -15,6 +17,7 @@ export default function Dashboard() {
   const [tasks, setTasks] = useState<Task[]>([])
   const [newTaskCreted, setNewTaskCreted] = useState<boolean>(false)
   const [newTaskEdited, setNewTaskEdited] = useState<boolean>(false)
+  const [taskDeleted, setTaskDeleted] = useState<boolean>(false)
 
   useEffect(() => {
     const fetchTasks = async () => {
@@ -23,14 +26,19 @@ export default function Dashboard() {
       if (message === 'Unauthenticated.') router.push('/auth/login')
     }
     fetchTasks()
-  }, [newTaskCreted, newTaskEdited])
+  }, [newTaskCreted, newTaskEdited, taskDeleted])
 
   return (
     <div>
+      <Toaster position='top-right' reverseOrder={false} />
       <div className='flex justify-end mb-4'>
         <CreateModal setNewTaskCreted={setNewTaskCreted} />
       </div>
-      <TaskTable tasks={tasks} setNewTaskEdited={setNewTaskEdited} />
+      <TaskTable
+        tasks={tasks}
+        setNewTaskEdited={setNewTaskEdited}
+        setTaskDeleted={setTaskDeleted}
+      />
     </div>
   )
 }

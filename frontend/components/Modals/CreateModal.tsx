@@ -10,15 +10,16 @@ import {
   ModalContent,
   ModalHeader,
   ModalBody,
-  ModalFooter,
   Button,
   useDisclosure,
 } from '@nextui-org/react'
 import { Input } from '@nextui-org/input'
 import { Select, SelectItem } from '@nextui-org/select'
 import { Radio, RadioGroup } from '@nextui-org/radio'
+//React Hot Toast
+import { toast } from 'react-hot-toast'
 // Actions
-import { createTask, TaskResponse } from '@/app/actions'
+import { createTask } from '@/app/actions'
 //Components
 import ErrorMessage from '@/components/ErrorMessage'
 // Schemas
@@ -27,7 +28,7 @@ import { taskValidationSchema } from '@/schemas'
 import { categories } from '@/constants'
 // Types
 import { Dispatch, SetStateAction } from 'react'
-import { TaskFormData } from '@/types'
+import { Task, TaskFormData, TaskResponse } from '@/types'
 
 type Props = {
   setNewTaskCreted: Dispatch<SetStateAction<boolean>>
@@ -48,13 +49,14 @@ export const CreateModal = ({ setNewTaskCreted }: Props) => {
     validateOnBlur: true,
     onSubmit: async (values) => {
       setNewTaskCreted(false)
-      const response: TaskResponse = await createTask(
+      const response: TaskResponse<Task> = await createTask(
         values.title,
         values.description,
         values.category,
         Boolean(values.finished === 'true')
       )
       if (response?.success) {
+        toast.success(response.message)
         setNewTaskCreted(true)
         onClose()
       } else {

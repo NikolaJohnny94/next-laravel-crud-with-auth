@@ -18,7 +18,6 @@ import ErrorMessage from '@/components/ErrorMessage'
 import Spinner from '@/components/Spinner'
 //Types
 import { LoginFormData } from '@/types/auth/LoginFormData.type'
-import { slugify } from '@/utils'
 
 export const LoginForm = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
@@ -34,7 +33,7 @@ export const LoginForm = () => {
     onSubmit: async (values) => {
       const response: any = await login(values.email, values.password)
       if (response?.success) {
-        router.push(`/user/${slugify(response.data.name)}/tasks/dashboard`)
+        router.push(`/tasks/dashboard`)
       } else {
         setErrorMessage(response?.message)
       }
