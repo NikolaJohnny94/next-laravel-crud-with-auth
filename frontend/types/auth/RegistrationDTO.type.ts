@@ -1,4 +1,4 @@
-export type RegistrationFormData = {
+export type RegistrationDTO = {
   name: string
   email: string
   password: string

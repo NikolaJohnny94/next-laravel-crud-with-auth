@@ -12,14 +12,17 @@ import {
   ModalBody,
   Button,
   useDisclosure,
+  Spinner,
 } from '@nextui-org/react'
 import { Input } from '@nextui-org/input'
 import { Select, SelectItem } from '@nextui-org/select'
 import { Radio, RadioGroup } from '@nextui-org/radio'
+// React Icons
+import { MdOutlineAddTask } from 'react-icons/md'
 //React Hot Toast
 import { toast } from 'react-hot-toast'
 // Actions
-import { createTask } from '@/app/actions'
+import { createTask } from '@/lib/actions'
 //Components
 import ErrorMessage from '@/components/ErrorMessage'
 // Schemas
@@ -36,7 +39,9 @@ type Props = {
 
 export const CreateModal = ({ setNewTaskCreted }: Props) => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
+
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure()
+
   const formik = useFormik<TaskFormData>({
     initialValues: {
       title: '',
@@ -49,12 +54,12 @@ export const CreateModal = ({ setNewTaskCreted }: Props) => {
     validateOnBlur: true,
     onSubmit: async (values) => {
       setNewTaskCreted(false)
-      const response: TaskResponse<Task> = await createTask(
-        values.title,
-        values.description,
-        values.category,
-        Boolean(values.finished === 'true')
-      )
+      const response: TaskResponse<Task> = await createTask({
+        title: values.title,
+        description: values.description,
+        category: values.category,
+        finished: Boolean(values.finished === 'true'),
+      })
       if (response?.success) {
         toast.success(response.message)
         setNewTaskCreted(true)
@@ -68,9 +73,10 @@ export const CreateModal = ({ setNewTaskCreted }: Props) => {
   return (
     <>
       <Button onPress={onOpen} color='danger'>
-        New Task
+        <MdOutlineAddTask size={20} /> New Task
       </Button>
       <Modal
+        className='p-6'
         isOpen={isOpen}
         onOpenChange={onOpenChange}
         isDismissable={false}
@@ -137,7 +143,7 @@ export const CreateModal = ({ setNewTaskCreted }: Props) => {
                   </div>
                   <div className='mb-4'>
                     <RadioGroup
-                      label='Select your favorite city'
+                      label='Task Status'
                       name='finished'
                       value={formik.values.finished}
                       onChange={formik.handleChange}
@@ -152,7 +158,15 @@ export const CreateModal = ({ setNewTaskCreted }: Props) => {
                     className='text-white'
                     disabled={formik.isSubmitting}
                   >
-                    Submit
+                    {formik.isSubmitting ? (
+                      <span className='flex items-center'>
+                        {' '}
+                        Submitting...
+                        <Spinner color='white' size='sm' />
+                      </span>
+                    ) : (
+                      <span>Submit</span>
+                    )}
                   </Button>
                 </form>
               </ModalBody>

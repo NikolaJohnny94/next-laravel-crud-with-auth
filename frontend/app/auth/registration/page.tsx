@@ -4,10 +4,5 @@ import React from 'react'
 import { RegistrationForm } from '@/components'
 
 export default function RegistrationPage() {
-  return (
-    <div>
-      <h2 className='text-2xl mb-4'>Registration</h2>
-      <RegistrationForm />
-    </div>
-  )
+  return <RegistrationForm />
 }

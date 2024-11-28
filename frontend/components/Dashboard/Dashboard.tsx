@@ -8,12 +8,13 @@ import { Toaster } from 'react-hot-toast'
 import { CreateModal } from '@/components'
 import TaskTable from './TaskTable'
 //Actions
-import { getTasks } from '@/app/actions'
+import { getTasks } from '@/lib/actions'
 //Types
 import { Task } from '@/types'
 
 export default function Dashboard() {
   const router = useRouter()
+
   const [tasks, setTasks] = useState<Task[]>([])
   const [newTaskCreted, setNewTaskCreted] = useState<boolean>(false)
   const [newTaskEdited, setNewTaskEdited] = useState<boolean>(false)

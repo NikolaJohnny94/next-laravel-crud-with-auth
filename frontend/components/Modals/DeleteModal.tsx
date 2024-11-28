@@ -1,4 +1,6 @@
 'use client'
+//Core
+import { useState } from 'react'
 //Next UI
 import {
   Modal,
@@ -9,13 +11,14 @@ import {
   Button,
   useDisclosure,
   Tooltip,
+  Spinner,
 } from '@nextui-org/react'
 //React Hot Toast
 import { toast } from 'react-hot-toast'
 //Components
 import { DeleteIcon } from '../Icons'
 //Actions
-import { deleteTask } from '@/app/actions'
+import { deleteTask } from '@/lib/actions'
 
 type Props = {
   taskId: number
@@ -23,9 +26,12 @@ type Props = {
 }
 
 export const DeleteModal = ({ taskId, setTaskDeleted }: Props) => {
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure()
 
   const handleDelete = async () => {
+    setIsSubmitting(true)
     setTaskDeleted(false)
 
     const { success } = await deleteTask(taskId)
@@ -33,6 +39,7 @@ export const DeleteModal = ({ taskId, setTaskDeleted }: Props) => {
     if (success) {
       toast.success('Task deleted successfully')
       setTaskDeleted(true)
+      setIsSubmitting(false)
       onClose()
     }
   }
@@ -44,7 +51,6 @@ export const DeleteModal = ({ taskId, setTaskDeleted }: Props) => {
           <DeleteIcon onClick={onOpen} />
         </span>
       </Tooltip>
-
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
           {(onClose) => (
@@ -53,11 +59,18 @@ export const DeleteModal = ({ taskId, setTaskDeleted }: Props) => {
                 Delete Confirmation
               </ModalHeader>
               <ModalBody>
-                <p>Are you sure you want to delete this user?</p>
+                <p>Are you sure you want to delete this task?</p>
               </ModalBody>
               <ModalFooter>
                 <Button color='danger' onPress={handleDelete}>
-                  Confirm
+                  {isSubmitting ? (
+                    <span className='flex items-center'>
+                      Deleting...
+                      <Spinner color='white' size='sm' className='ml-2' />
+                    </span>
+                  ) : (
+                    <span>Confirm</span>
+                  )}
                 </Button>
                 <Button color='primary' onPress={onClose}>
                   Close

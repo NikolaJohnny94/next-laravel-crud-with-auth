@@ -13,6 +13,7 @@ import {
   Button,
   useDisclosure,
   Tooltip,
+  Spinner,
 } from '@nextui-org/react'
 import { Input } from '@nextui-org/input'
 import { Select, SelectItem } from '@nextui-org/select'
@@ -20,7 +21,7 @@ import { Radio, RadioGroup } from '@nextui-org/radio'
 //React Hot Toast
 import { toast } from 'react-hot-toast'
 // Actions
-import { editTask } from '@/app/actions'
+import { editTask } from '@/lib/actions'
 //Components
 import ErrorMessage from '@/components/ErrorMessage'
 import { EditIcon } from '../Icons'
@@ -37,7 +38,7 @@ type Props = {
   title: string
   description: string
   category: 'work' | 'personal' | 'other'
-  finished: 'true' | 'false'
+  finished: boolean
   setNewTaskEdited: Dispatch<SetStateAction<boolean>>
 }
 
@@ -50,13 +51,16 @@ export const EditModal = ({
   setNewTaskEdited,
 }: Props) => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [taskValuesUpdated, setTaskValuesUpdated] = useState(false)
+
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure()
+
   const formik = useFormik<TaskFormData>({
     initialValues: {
       title: title,
       description: description,
       category: category,
-      finished: finished,
+      finished: finished ? 'true' : 'false',
     },
     validationSchema: toFormikValidationSchema(taskValidationSchema),
     validateOnChange: false,
@@ -67,8 +71,9 @@ export const EditModal = ({
         values.title !== title ||
         values.description !== description ||
         values.category !== category ||
-        values.finished !== finished
+        Boolean(values.finished === 'true') !== finished
       ) {
+        setTaskValuesUpdated(true)
         const response: TaskResponse<Task> = await editTask(taskId, {
           title: values.title,
           description: values.description,
@@ -79,12 +84,14 @@ export const EditModal = ({
         if (response?.success) {
           toast.success('Task edited successfully')
           setNewTaskEdited(true)
+          setTaskValuesUpdated(false)
           onClose()
         } else {
           setErrorMessage(response?.message)
         }
       } else {
         onClose()
+        setTaskValuesUpdated(false)
       }
     },
   })
@@ -98,6 +105,7 @@ export const EditModal = ({
       </Tooltip>
 
       <Modal
+        className='p-6'
         isOpen={isOpen}
         onOpenChange={onOpenChange}
         isDismissable={false}
@@ -107,7 +115,7 @@ export const EditModal = ({
           {(onClose) => (
             <>
               <ModalHeader className='flex flex-col gap-1'>
-                Modal Title
+                Update User
               </ModalHeader>
               <ModalBody>
                 <form onSubmit={formik.handleSubmit}>
@@ -165,7 +173,7 @@ export const EditModal = ({
                   </div>
                   <div className='mb-4'>
                     <RadioGroup
-                      label='Select your favorite city'
+                      label='Task Status'
                       name='finished'
                       value={formik.values.finished}
                       onChange={formik.handleChange}
@@ -180,7 +188,15 @@ export const EditModal = ({
                     className='text-white'
                     disabled={formik.isSubmitting}
                   >
-                    Submit
+                    {formik.isSubmitting && taskValuesUpdated ? (
+                      <span className='flex items-center'>
+                        {' '}
+                        Submitting...
+                        <Spinner color='white' size='sm' />
+                      </span>
+                    ) : (
+                      <span>Submit</span>
+                    )}
                   </Button>
                 </form>
               </ModalBody>

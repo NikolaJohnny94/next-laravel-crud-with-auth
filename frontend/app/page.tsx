@@ -1,12 +1,15 @@
 'use client'
+//NextUI
 import { Link } from '@nextui-org/link'
 import { Snippet } from '@nextui-org/snippet'
 import { Code } from '@nextui-org/code'
 import { button as buttonStyles } from '@nextui-org/theme'
-
-import { siteConfig } from '@/config/site'
-import { title, subtitle } from '@/constants'
+// Components
 import { GithubIcon } from '@/components'
+// Config
+import { siteConfig } from '@/config/site'
+// Constants
+import { title, subtitle } from '@/constants'
 
 export default function Home() {
   return (

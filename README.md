@@ -2,7 +2,7 @@
 
 ## 📜 Description
 
-Tasks Dashboard CRUD app, with authentification (JWT), made with Next.js 14, Laravel, NextUI, Zod, Formik, Tailwind CSS, TypeScript and JWT. On the app initialization, user have option to signin if user already created account, or to signup if user already have account.After user successfully signin, the page is redirected to tasks/dashboard page where user have option to create new task. The task form consists of task's title, description, category (personal, work, other) and task status (completed, not completed). On successfull task creation, the task is displayed in the tasks table, with created tasks's info and three options: details (tasks details page), edit (edit modal for taks updating) and delete (delete confirmation modal).
+Tasks Dashboard CRUD app, with authentification Laravel Sanctum, made with Next.js 14, Laravel, NextUI, Zod, Formik, Tailwind CSS, TypeScript and JWT. On the app initialization, user have option to signin if user already created account, or to signup if user already have account.After user successfully signin, the page is redirected to tasks/dashboard page where user have option to create new task. The task form consists of task's title, description, category (personal, work, other) and task status (completed, not completed). On successfull task creation, the task is displayed in the tasks table, with created tasks's info and three options: details (tasks details page), edit (edit modal for taks editing) and delete (delete confirmation modal).
 
 ## 💻 Technologies used:
 
@@ -16,56 +16,93 @@ Tasks Dashboard CRUD app, with authentification (JWT), made with Next.js 14, Lar
 <img src="https://cdn.icon-icons.com/icons2/2699/PNG/512/tailwindcss_logo_icon_167923.png" width="22px"/> [Tailwind](https://tailwindcss.com/) - A utility-first CSS framework for custom, responsive designs.<br>
 <img src="https://cdn.icon-icons.com/icons2/2415/PNG/512/typescript_plain_logo_icon_146316.png" width="20"/> [TypeScript](https://www.typescriptlang.org/) - A typed JavaScript superset for building reliable, maintainable code<br/>
 
-# Next.js & NextUI Template
+## Front-End:
 
-This is a template for creating applications using Next.js 14 (app directory) and NextUI (v2).
+## ⚙️ Configuration:
 
-[Try it on CodeSandbox](https://githubbox.com/nextui-org/next-app-template)
+Configure the database connection in the `.env.local` file:
 
-## Technologies Used
-
-- [Next.js 14](https://nextjs.org/docs/getting-started)
-- [NextUI v2](https://nextui.org/)
-- [Tailwind CSS](https://tailwindcss.com/)
-- [Tailwind Variants](https://tailwind-variants.org)
-- [TypeScript](https://www.typescriptlang.org/)
-- [Framer Motion](https://www.framer.com/motion/)
-- [next-themes](https://github.com/pacocoursey/next-themes)
-
-## How to Use
-
-### Use the template with create-next-app
-
-To create a new project based on this template using `create-next-app`, run the following command:
-
-```bash
-npx create-next-app -e https://github.com/nextui-org/next-app-template
+```env
+NEXT_PUBLIC_BACKEND_URL=YOUR_BACKEND_URL
+NEXT_PUBLIC_APP_URL=NEXT_PUBLIC_URL
 ```
 
-### Install dependencies
+For localhost you can set **these** values in order for app to work:
 
-You can use one of them `npm`, `yarn`, `pnpm`, `bun`, Example using `npm`:
+```env
+NEXT_PUBLIC_BACKEND_URL=http://localhost:8000/api
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+```
+
+### 🛠️ Installation guide:
+
+Navigate to **./frontend** folder and run the following command:
 
 ```bash
 npm install
 ```
 
-### Run the development server
+### 🚀 Run the development server:
 
 ```bash
 npm run dev
 ```
 
-### Setup pnpm (optional)
+The app will run on http://localhost:3000
 
-If you are using `pnpm`, you need to add the following code to your `.npmrc` file:
+## Back-End:
+
+## ⚙️ Configuration
+
+Generate an application key:
 
 ```bash
-public-hoist-pattern[]=*@nextui-org/*
+php artisan key:generate
 ```
 
-After modifying the `.npmrc` file, you need to run `pnpm install` again to ensure that the dependencies are installed correctly.
+Copy the `.env.example` file to `.env`:
 
-## License
+```bash
+cp .env.example .env
+```
 
-Licensed under the [MIT license](https://github.com/nextui-org/next-app-template/blob/main/LICENSE).
+Configure the database connection in the `.env` file:
+
+```env
+DB_CONNECTION=your_database_driver
+DB_HOST=your_database_host
+DB_PORT=your_database_port
+DB_DATABASE=your_database_name
+DB_USERNAME=your_database_username
+DB_PASSWORD=your_database_password
+```
+
+### 🛠️ Installation guide:
+
+Navigate to **./backend** folder and run the following command:
+
+```bash
+composer install
+```
+
+### 🚀 Run the development server:
+
+```bash
+php artisan serve
+```
+
+The app will run on http://localhost:8000
+
+## Database Seeding 🌱
+
+Run the database migrations and seed the database:
+
+```bash
+php artisan migrate
+php artisan db:seed --class=UsersSeeder
+php artisan db:seed --class=TasksSeeder
+```
+
+This will create two **users**: one random user
+and one test user with _values_: **name**: '**_Test User_**', **email**: **_testuser@example.com_**. Both users will have '**_Test123._**' as '**password**' value.
+Also this will generate 5 random tasks that will be assigned randomly between these two users.

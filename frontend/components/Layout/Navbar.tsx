@@ -1,5 +1,7 @@
+'use client'
 //Core
 import NextLink from 'next/link'
+import { usePathname } from 'next/navigation'
 // NextUI
 import {
   Navbar as NextUINavbar,
@@ -8,6 +10,10 @@ import {
   NavbarItem,
 } from '@nextui-org/navbar'
 import { link as linkStyles } from '@nextui-org/theme'
+// React Icons
+import { FaUserAlt } from 'react-icons/fa'
+import { PiUserCirclePlusBold } from 'react-icons/pi'
+import { FiLogIn } from 'react-icons/fi'
 // clsx
 import clsx from 'clsx'
 //Components
@@ -22,16 +28,20 @@ type Props = {
 }
 
 export const Navbar = ({ username, isLoggedIn }: Props) => {
-  // NavItems to render
+  const pathname = usePathname()
+
   const navItems = siteConfig.navItems.filter((item) => {
     if (isLoggedIn && item.label === 'Dashboard') {
       return item
     }
-    if (
-      !isLoggedIn &&
-      (item.label === 'Login' || item.label === 'Registration')
-    ) {
-      return item
+    if (!isLoggedIn) {
+      if (pathname === '/auth/login' && item.label === 'Registration') {
+        return item
+      }
+
+      if (pathname === '/auth/registration' && item.label === 'Login') {
+        return item
+      }
     }
   })
 
@@ -58,13 +68,29 @@ export const Navbar = ({ username, isLoggedIn }: Props) => {
                 color='foreground'
                 href={item.href}
               >
+                {item.label === 'Registration' && (
+                  <span className='mr-2'>
+                    <PiUserCirclePlusBold size={20} />
+                  </span>
+                )}
+
+                {item.label === 'Login' && (
+                  <span className='mr-2'>
+                    <FiLogIn size={20} />
+                  </span>
+                )}
                 {item.label}
               </NextLink>
             </NavbarItem>
           ))}
           {isLoggedIn && (
             <div className='flex justify-center items-center gap-4'>
-              <NavbarItem className='text-danger'>{username}</NavbarItem>
+              <NavbarItem className='text-danger text-sm flex justify-center items-center'>
+                <span className='mr-2'>
+                  <FaUserAlt size={15} />
+                </span>{' '}
+                <span className='font-semibold'> {username}</span>
+              </NavbarItem>
               <Logout />
             </div>
           )}
